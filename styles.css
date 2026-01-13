@@ -7,6 +7,14 @@
     display: inline;
 }
 
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
 .arimo {
     font-family: "Arimo", sans-serif;
     font-optical-sizing: auto;
@@ -88,12 +96,12 @@
     line-height: 24px;
 }
 
+
 /* button styles */
 
 .btn-1 {
     display: flex;
-    margin-left: 26px;
-    margin-right: 20px;
+    margin-right: 2rem;
     width: 122.434px;
     height: 44.006px;
     padding: 10px 20px;
@@ -109,10 +117,45 @@
     line-height: 24px;
 }
 
+.btn-l {
+    display: flex;
+    margin-right: -2.8rem;
+    width: 122.434px;
+    height: 44.006px;
+    padding: 10px 20px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: none;
+    background: #FFF;
+    color: #45556C;
+    text-align: center;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.btn-l:hover {
+    display: flex;
+    margin-right: -1.5rem;
+    width: 80.434px;
+    height: 44.006px;
+    padding: 10px 20px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: none;
+    background-color: rgba(69, 85, 108, 0.1);
+    text-align: center;
+    font-size: 14px;
+    line-height: 24px;
+}
+
 .btn-1:hover {
     display: flex;
-    margin-left: 26px;
-    margin-right: 20px;
+    margin-left: 0px;
+    margin-right: 32px;
     width: 122.434px;
     height: 44.006px;
     padding: 10px 20px;
@@ -145,7 +188,7 @@
     border: none;
     height: 3.4rem;
     width: 12.2rem;
-    background: #155DFC;
+    background: rgba(21, 93, 252, 0.9);
 }
 
 .btn-2:hover {
@@ -158,7 +201,7 @@
     height: 3.4rem;
     width: 12.2rem;
     background: #155DFC;
-    box-shadow: 2.5px 2.5px 5px rgba(128, 128, 128, 0.6);
+    box-shadow: 2.5px 2.5px 5px rgb(86, 144, 251);
 }
 
 .btn-3 {
@@ -183,6 +226,7 @@
     border: 2px solid #155DFC;
     height: 3.5rem;
     background-color: #FFF;
+    background-color: rgba(128, 128, 128, 0.1);
     width: 12.2rem;
     border-radius: 10px;
     height: 3.4rem;
@@ -461,14 +505,17 @@ a {
     width: 265.701px;
     height: 320.642px;
     border-radius: 10px;
-    border: 1.818px solid rgb(219, 234, 254);
+    border: 1.5px solid rgb(4, 128, 49);
     background: #FFF;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: left;
-    box-shadow: 5px 5px 5px rgb(219, 234, 254, 0.6);
+    box-shadow: 5px 7px 5px rgba(219, 221, 254, 0.8);
+}
 
+.home-card-2:hover {
+    border: 2px solid rgb(109, 4, 4)
 }
 
 .home-4-card-icon {
