@@ -490,7 +490,8 @@ li {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 6rem 24px;
+    padding: 0px 24px;
+    padding-top: 8rem;
     gap: none;
 }
 
@@ -523,6 +524,7 @@ li {
     align-items: flex-start;
     gap: 31.998px;
     flex-shrink: 0;
+    margin-top: 1rem;
     align-self: stretch;
 }
 
@@ -589,7 +591,8 @@ li {
     background: #155DFC;
     height: auto;
     width: auto;
-    margin-bottom: 80px;
+    margin-bottom: 40px;
+    margin-top: -4rem;
 }
 
 .home-5-head {
@@ -602,8 +605,6 @@ li {
     line-height: 36px;
     margin-top: 1rem;
     padding-top: 1.5rem;
-
-
 }
 
 .home-5-text {
@@ -627,59 +628,91 @@ li {
 
 /* footer styles */
 
-
-
-.footer {
+.footer-container {
     display: flex;
     justify-content: space-between;
-    align-items: left;
-    gap: 28px;
-    margin-top: 2rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    align-items: flex-start;
+    padding: 40px 80px;
+    background-color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
 }
 
-.footer-h {
+.footer-brand {
+    flex: 1.5;
+    margin-right: 40px;
+    margin-top: 1.2rem;
+}
+
+.brand-header {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
-.footer-c{
+.brand-logo-icon {
+    background-color: #2563eb;
+    padding: 8px;
+    border-radius: 8px;
     display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
     align-items: center;
-    gap: 4px;
-    width: 180px;
+    justify-content: center;
 }
 
-.footer-c-h {
-    color: #0F172B;
-    font-family: Arimo;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-}
-
-.footer-head {
-    color: #0F172B;
-    font-family: Arimo;
-    font-size: 18px;
-    font-style: normal;
+.brand-name {
+    font-size: 1.25rem;
     font-weight: 700;
-    line-height: 28px;
+    color: #111827;
 }
 
-.footer-text {
-    color: #45556C;
-    font-family: Arimo;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px;
-    width: 180px;
+.brand-description {
+    font-size: 0.95rem;
+    color: #6b7280;
+    line-height: 1.5;
+    max-width: 250px;
+}
+
+/* Styling for the link columns */
+.footer-column {
+    flex: 1;
+}
+
+.column-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 20px;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 12px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #6b7280;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: #2563eb;
+}
+
+/* Responsive adjustment for mobile */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        gap: 30px;
+        padding: 40px 20px;
+    }
 }
 
 .copyright {
