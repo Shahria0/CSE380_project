@@ -1,0 +1,684 @@
+/* ============================================================
+   client/src/animations.css — Global Animation System
+   ============================================================
+   HOW THIS WORKS:
+   
+   1. PAGE TRANSITIONS — Every page fades + slides in on mount.
+      The .page-enter class is applied automatically by the
+      PageTransition wrapper component in App.js. It uses a
+      CSS animation triggered on every route change.
+
+   2. HOVER EFFECTS — CSS classes you add to elements:
+      .hover-lift     → card floats up on hover
+      .hover-glow     → blue glow ring appears
+      .hover-scale    → element scales up slightly
+      .hover-slide-up → text slides up (for nav links)
+      .hover-bright   → background brightens
+      .btn-animated   → button with ripple + press effect
+   
+   3. ENTRANCE ANIMATIONS — Elements animate in on first render:
+      .anim-fade-up   → fades in from below
+      .anim-fade-in   → plain fade in
+      .anim-slide-right → slides in from left
+      .anim-stagger-{1-6} → delayed versions for sequential reveals
+   
+   4. SKELETON SHIMMER — already defined in index.css,
+      referenced here for completeness.
+
+   PERFORMANCE NOTE (senior tip):
+   All animations use `transform` and `opacity` only.
+   These are GPU-composited properties — they NEVER cause
+   layout reflow. Animating width/height/top/left is 10-100x
+   slower. When in doubt: transform + opacity = fast.
+   ============================================================ */
+
+/* ── PAGE TRANSITION ──────────────────────────────────────────
+   Applied to the wrapper div around every page.
+   Uses a 3-phase animation: invisible → slide up + fade in → settled.
+   The "cubic-bezier" easing makes it feel springy and natural.
+   
+   cubic-bezier(0.16, 1, 0.3, 1) = "expo out" — fast start, 
+   gentle deceleration. Feels premium, not mechanical.
+   ─────────────────────────────────────────────────────────── */
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    /* filter: blur(3px); */ /* Uncomment for a subtle defocus effect */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pageEnterLeft {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pageEnterRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.page-enter {
+  animation: pageEnter 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* "both" = animation applies forwards AND backwards (stays at end state) */
+}
+
+/* Slightly different entry for auth pages (centered cards) */
+.page-enter-scale {
+  animation: pageEnterScale 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pageEnterScale {
+  from { opacity: 0; transform: scale(0.97) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+
+/* ── ENTRANCE ANIMATIONS (for individual elements) ────────────
+   Use these on cards, headers, anything that should animate in.
+   Add delay utilities (.anim-stagger-1 through .anim-stagger-6)
+   to create sequential "cascade" effects on lists/grids.
+   ─────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.anim-fade-up    { animation: fadeUp    0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.anim-fade-in    { animation: fadeIn    0.4s ease both; }
+.anim-slide-right { animation: slideRight 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.anim-scale-in   { animation: scaleIn   0.35s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* Staggered delays — apply to siblings for cascade effect */
+.anim-stagger-1 { animation-delay: 0.05s; }
+.anim-stagger-2 { animation-delay: 0.10s; }
+.anim-stagger-3 { animation-delay: 0.15s; }
+.anim-stagger-4 { animation-delay: 0.20s; }
+.anim-stagger-5 { animation-delay: 0.25s; }
+.anim-stagger-6 { animation-delay: 0.30s; }
+
+
+/* ── HOVER: LIFT ──────────────────────────────────────────────
+   The most versatile hover effect. Adds shadow + subtle upward
+   movement. Perfect for cards, buttons, any clickable element.
+   Will-change hints the browser to pre-optimize this element.
+   ─────────────────────────────────────────────────────────── */
+.hover-lift {
+  transition:
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+  will-change: transform, box-shadow;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(15, 23, 43, 0.13), 0 2px 8px rgba(15, 23, 43, 0.06);
+  border-color: var(--border-dark) !important;
+}
+
+.hover-lift:active {
+  /* Satisfying "press" feedback */
+  transform: translateY(-1px);
+  box-shadow: 0 3px 12px rgba(15, 23, 43, 0.10);
+  transition-duration: 0.08s;
+}
+
+
+/* ── HOVER: GLOW ─────────────────────────────────────────────
+   Blue ring + upward movement. Use on primary CTAs, featured
+   cards, or anything that deserves special attention.
+   ─────────────────────────────────────────────────────────── */
+.hover-glow {
+  transition:
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.25s ease;
+  will-change: transform, box-shadow;
+}
+
+.hover-glow:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 0 0 3px rgba(21, 93, 252, 0.15),
+    0 8px 24px rgba(21, 93, 252, 0.2);
+}
+
+.hover-glow:active {
+  transform: translateY(0);
+  transition-duration: 0.08s;
+}
+
+
+/* ── HOVER: SCALE ─────────────────────────────────────────────
+   Subtle scale-up. Best for avatars, icons, images.
+   The cubic-bezier gives a tiny overshoot (spring feel).
+   ─────────────────────────────────────────────────────────── */
+.hover-scale {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
+.hover-scale:hover  { transform: scale(1.06); }
+.hover-scale:active { transform: scale(0.97); transition-duration: 0.08s; }
+
+
+/* ── HOVER: BRIGHT (background fade) ─────────────────────────
+   Background brightens on hover. Use on nav links, menu items,
+   list items — anything that doesn't need physical movement.
+   ─────────────────────────────────────────────────────────── */
+.hover-bright {
+  transition: background-color 0.16s ease, color 0.16s ease;
+}
+
+.hover-bright:hover {
+  background-color: var(--brand-light) !important;
+  color: var(--brand) !important;
+}
+
+
+/* ── HOVER: UNDERLINE SLIDE ───────────────────────────────────
+   Animated underline that slides in from left. For text links.
+   Requires position:relative on the element.
+   ─────────────────────────────────────────────────────────── */
+.hover-underline {
+  position: relative;
+  transition: color 0.18s ease;
+}
+
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 0; height: 2px;
+  background: var(--brand);
+  border-radius: 1px;
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-underline:hover::after { width: 100%; }
+.hover-underline:hover { color: var(--brand); }
+
+
+/* ── BUTTONS: Animated (ripple + press) ───────────────────────
+   Enhanced button with:
+   - Smooth background/shadow transition
+   - Physical "press" feel on :active
+   - Disabled state animation prevention
+   ─────────────────────────────────────────────────────────── */
+.btn-animated {
+  position: relative;
+  overflow: hidden;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.2s ease;
+  will-change: transform;
+}
+
+.btn-animated:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(21, 93, 252, 0.3);
+}
+
+.btn-animated:active:not(:disabled) {
+  transform: translateY(0px) scale(0.98);
+  box-shadow: 0 2px 8px rgba(21, 93, 252, 0.2);
+  transition-duration: 0.07s;
+}
+
+.btn-animated:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Ripple effect on click */
+.btn-animated::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.18);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+}
+
+.btn-animated:active::before { opacity: 1; transition-duration: 0.05s; }
+
+
+/* ── SECONDARY BUTTON HOVER ───────────────────────────────────
+   For outlined / ghost buttons — no upward movement, just border
+   color shift and subtle background fill.
+   ─────────────────────────────────────────────────────────── */
+.btn-secondary-animated {
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-secondary-animated:hover:not(:disabled) {
+  border-color: var(--brand) !important;
+  color: var(--brand) !important;
+  background-color: var(--brand-light) !important;
+  transform: translateY(-1px);
+}
+
+.btn-secondary-animated:active:not(:disabled) {
+  transform: scale(0.98);
+  transition-duration: 0.07s;
+}
+
+
+/* ── NAV LINK HOVER ───────────────────────────────────────────
+   Smooth background + color transition for navbar links.
+   Includes a subtle bottom indicator line.
+   ─────────────────────────────────────────────────────────── */
+.nav-link-animated {
+  position: relative;
+  transition:
+    background-color 0.16s ease,
+    color 0.16s ease;
+}
+
+.nav-link-animated::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%; right: 50%;
+  height: 2px;
+  background: var(--brand);
+  border-radius: 1px 1px 0 0;
+  transition: left 0.22s ease, right 0.22s ease;
+}
+
+.nav-link-animated:hover::before,
+.nav-link-animated.active::before {
+  left: 8px;
+  right: 8px;
+}
+
+
+/* ── POST CARD HOVER ──────────────────────────────────────────
+   Multi-property transition for post cards: lift + border glow
+   + inner title color change (handled in PostCard.js).
+   ─────────────────────────────────────────────────────────── */
+.post-card-animated {
+  transition:
+    transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.24s ease,
+    border-color 0.2s ease;
+  will-change: transform;
+  cursor: default;
+}
+
+.post-card-animated:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(15, 23, 43, 0.11), 0 2px 8px rgba(15, 23, 43, 0.05);
+  border-color: var(--brand-100) !important;
+}
+
+/* Title color shifts on card hover */
+.post-card-animated:hover .card-title-hover {
+  color: var(--brand);
+  transition: color 0.18s ease;
+}
+
+
+/* ── INPUT FOCUS ──────────────────────────────────────────────
+   Smooth border transition + focus ring animation.
+   The ring "expands" from the input border outward.
+   ─────────────────────────────────────────────────────────── */
+.input-animated {
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.input-animated:focus {
+  border-color: var(--brand) !important;
+  box-shadow: 0 0 0 3px rgba(21, 93, 252, 0.12);
+  outline: none;
+}
+
+
+/* ── DROPDOWN ANIMATION ───────────────────────────────────────
+   The user dropdown menu fades + slides down on open.
+   Applied inline in Navbar.js when dropdownOpen === true.
+   ─────────────────────────────────────────────────────────── */
+@keyframes dropdownEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dropdown-animated {
+  animation: dropdownEnter 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: top right;
+}
+
+/* Each dropdown item slides in with a stagger */
+.dropdown-item-animated {
+  transition:
+    background-color 0.14s ease,
+    color 0.14s ease,
+    transform 0.14s ease,
+    padding-left 0.14s ease;
+}
+
+.dropdown-item-animated:hover {
+  background-color: var(--brand-light) !important;
+  color: var(--brand) !important;
+  padding-left: 1.15rem !important;
+}
+
+
+/* ── BADGE HOVER ──────────────────────────────────────────────
+   Badges (post type labels) slightly enlarge on hover.
+   ─────────────────────────────────────────────────────────── */
+.badge-animated {
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.18s ease;
+  display: inline-flex;
+}
+
+.badge-animated:hover {
+  transform: scale(1.08);
+}
+
+
+/* ── MODAL ENTRANCE ───────────────────────────────────────────
+   Modals slide up from below + the overlay fades in.
+   ─────────────────────────────────────────────────────────── */
+@keyframes modalEnter {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes overlayEnter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal-animated {
+  animation: modalEnter 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.overlay-animated {
+  animation: overlayEnter 0.2s ease both;
+}
+
+
+/* ── ALERT ENTRANCE ───────────────────────────────────────────
+   Error/success alerts slide down from above.
+   ─────────────────────────────────────────────────────────── */
+@keyframes alertEnter {
+  from { opacity: 0; transform: translateY(-10px); max-height: 0; }
+  to   { opacity: 1; transform: translateY(0);     max-height: 80px; }
+}
+
+.alert-animated {
+  animation: alertEnter 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  overflow: hidden;
+}
+
+
+/* ── STEP CIRCLE (OTP stepper) ────────────────────────────────
+   Step indicator circles pulse when they become active.
+   ─────────────────────────────────────────────────────────── */
+@keyframes stepActivate {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+.step-circle-animated {
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.step-circle-animated.active {
+  animation: stepActivate 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+
+/* ── TAG / CHIP HOVER ─────────────────────────────────────────
+   Tags brighten and lift slightly on hover.
+   ─────────────────────────────────────────────────────────── */
+.tag-animated {
+  transition:
+    background-color 0.16s ease,
+    color 0.16s ease,
+    transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.16s ease;
+  cursor: pointer;
+}
+
+.tag-animated:hover {
+  background-color: var(--brand-100) !important;
+  color: var(--brand) !important;
+  border-color: var(--brand-100) !important;
+  transform: translateY(-2px);
+}
+
+
+/* ── LOGO SPIN (brand icon) ───────────────────────────────────
+   The EduBridge logo icon does a subtle rotation on hover.
+   ─────────────────────────────────────────────────────────── */
+.logo-animated {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.logo-animated:hover {
+  transform: rotate(12deg) scale(1.08);
+}
+
+
+/* ── STAT CARD HOVER ──────────────────────────────────────────
+   Dashboard stat cards lift with a colored left border on hover.
+   ─────────────────────────────────────────────────────────── */
+.stat-card-animated {
+  transition:
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.22s ease,
+    border-left-color 0.22s ease;
+  border-left: 3px solid transparent;
+}
+
+.stat-card-animated:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(15, 23, 43, 0.10);
+  border-left-color: var(--brand);
+}
+
+
+/* ── AVATAR HOVER ────────────────────────────────────────────
+   Author avatars pop on hover.
+   ─────────────────────────────────────────────────────────── */
+.avatar-animated {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.avatar-animated:hover {
+  transform: scale(1.12);
+  box-shadow: 0 0 0 3px rgba(21, 93, 252, 0.2);
+}
+
+
+/* ── SECTION ENTER (scroll-triggered feel) ────────────────────
+   Applied to major page sections — they appear with a gentle
+   fade-up as the page loads (staggered with delays).
+   ─────────────────────────────────────────────────────────── */
+.section-animated {
+  animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.section-animated:nth-child(1) { animation-delay: 0.05s; }
+.section-animated:nth-child(2) { animation-delay: 0.15s; }
+.section-animated:nth-child(3) { animation-delay: 0.25s; }
+.section-animated:nth-child(4) { animation-delay: 0.35s; }
+
+
+/* ── GRID CARD STAGGER ────────────────────────────────────────
+   When a grid of cards loads, each card enters with a delay.
+   Apply .grid-stagger to the grid container, cards get
+   nth-child delays automatically.
+   ─────────────────────────────────────────────────────────── */
+.grid-stagger > * {
+  animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.grid-stagger > *:nth-child(1)  { animation-delay: 0.04s; }
+.grid-stagger > *:nth-child(2)  { animation-delay: 0.09s; }
+.grid-stagger > *:nth-child(3)  { animation-delay: 0.14s; }
+.grid-stagger > *:nth-child(4)  { animation-delay: 0.19s; }
+.grid-stagger > *:nth-child(5)  { animation-delay: 0.24s; }
+.grid-stagger > *:nth-child(6)  { animation-delay: 0.29s; }
+.grid-stagger > *:nth-child(7)  { animation-delay: 0.32s; }
+.grid-stagger > *:nth-child(8)  { animation-delay: 0.35s; }
+.grid-stagger > *:nth-child(9)  { animation-delay: 0.38s; }
+.grid-stagger > *:nth-child(n+10) { animation-delay: 0.40s; }
+
+
+/* ── ROLE TOGGLE (register page) ─────────────────────────────
+   The student/alumni toggle button has a sliding indicator.
+   ─────────────────────────────────────────────────────────── */
+.role-btn-animated {
+  transition:
+    background-color 0.22s ease,
+    color 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.role-btn-animated:hover:not(.active) {
+  background-color: rgba(21, 93, 252, 0.06) !important;
+  color: var(--brand) !important;
+}
+
+.role-btn-animated.active {
+  transform: scale(1.01);
+}
+
+
+/* ── SETTINGS NAV ITEM ───────────────────────────────────────
+   Settings sidebar items slide text slightly right on hover.
+   ─────────────────────────────────────────────────────────── */
+.settings-nav-animated {
+  transition:
+    background-color 0.16s ease,
+    color 0.16s ease,
+    padding-left 0.18s ease;
+}
+
+.settings-nav-animated:hover {
+  background-color: var(--bg-light) !important;
+  color: var(--text-primary) !important;
+  padding-left: 1.1rem !important;
+}
+
+.settings-nav-animated.active {
+  background-color: var(--brand-light) !important;
+  color: var(--brand) !important;
+}
+
+
+/* ── FOOTER LINK HOVER ────────────────────────────────────────
+   Footer links shift color with an underline slide.
+   ─────────────────────────────────────────────────────────── */
+.footer-link-animated {
+  position: relative;
+  transition: color 0.16s ease;
+  display: inline-block;
+}
+
+.footer-link-animated::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0;
+  width: 0; height: 1px;
+  background: var(--brand);
+  transition: width 0.22s ease;
+}
+
+.footer-link-animated:hover { color: var(--brand) !important; }
+.footer-link-animated:hover::after { width: 100%; }
+
+
+/* ── HERO SECTION (landing page) ─────────────────────────────
+   Landing page elements enter with a staggered reveal.
+   ─────────────────────────────────────────────────────────── */
+.hero-title   { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
+.hero-sub     { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both; }
+.hero-buttons { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.34s both; }
+
+
+/* ── PULSE INDICATOR ─────────────────────────────────────────
+   Use on notification dots or "live" indicators.
+   ─────────────────────────────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.4); opacity: 0.6; }
+}
+
+.pulse { animation: pulse 2s ease-in-out infinite; }
+
+
+/* ── LOADING BOUNCE (3-dot loader) ───────────────────────────
+   A gentler alternative to a spinner for full-page loads.
+   ─────────────────────────────────────────────────────────── */
+@keyframes bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40%           { transform: translateY(-10px); }
+}
+
+.dot-loader { display: flex; gap: 6px; align-items: center; }
+.dot-loader span {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--brand);
+  animation: bounce 1.4s ease-in-out infinite;
+}
+.dot-loader span:nth-child(2) { animation-delay: 0.16s; background: var(--brand-100); }
+.dot-loader span:nth-child(3) { animation-delay: 0.32s; background: var(--brand-dark); }
+
+
+/* ── REDUCE MOTION (accessibility) ───────────────────────────
+   SENIOR NOTE: Users can set "prefers-reduced-motion" in their
+   OS accessibility settings (e.g. for vestibular disorders).
+   We MUST respect this. This block disables/simplifies all
+   our animations for those users.
+   ─────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

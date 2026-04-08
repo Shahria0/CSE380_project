@@ -1,0 +1,15 @@
+{
+  "name": "edubridge-mern",
+  "version": "2.0.0",
+  "description": "EduBridge Academic Collaboration Platform — MERN Stack",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install",
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm start\"",
+    "start:server": "cd server && npm run dev",
+    "start:client": "cd client && npm start"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
